@@ -16,7 +16,7 @@ var listofElvesMaxCalories = []
 var tempArr = []
 for (let i=0; i<=input.length; i++){
 	if(isNaN(input[i])){
-		listofElvesMaxCalories.push(tempArr.max())
+		listofElvesMaxCalories.push(tempArr.reduce((a,b) => a+b, 0))
 		var tempArr = []
 	} else {
 		tempArr.push(input[i])
