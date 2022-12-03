@@ -1,0 +1,20 @@
+var path = require('path');
+const fs = require('fs');
+
+var input = fs
+	.readFileSync(path.join(__dirname, 'input'), 'utf8')
+	.toString()
+	.trim()
+    .split('\n');
+
+var item_types = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+sum = 0
+for (let i=0; i<input.length; i++){
+    var chamber_1 = input[i].split('').slice(0,input[i].length / 2);
+    var chamber_2 = input[i].split('').slice(-input[i].length / 2);
+    var common_element = chamber_1.filter(value => chamber_2.includes(value));
+    sum += (item_types.indexOf(common_element[0]) + 1)
+}
+
+console.log("he sum of the priorities of those item types is %d", sum)
