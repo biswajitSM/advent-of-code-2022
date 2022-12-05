@@ -74,30 +74,39 @@ for (let i = 0; i < move_steps.length; i++) {
     move_steps[i] = move_steps[i].split(/([0-9]+)/).map((num) => parseInt(num, 10))
     move_steps[i] = removeNaN(move_steps[i])
 }
-var moved_stack = stack_to_col.slice();
 
-for (let i = 0; i < move_steps.length; i++) {
-    moves = move_steps[i]
-    moves[1] -= 1 //converted to indexes
-    moves[2] -= 1
-    if (!isNaN(moves[0])){
-        moving_elements = moved_stack[moves[1]].slice(0, moves[0]).reverse()
-        // console.log(stack_to_col[moves[2]])
-        moved_stack[moves[2]] = moving_elements.concat(moved_stack[moves[2]])
-        len = moved_stack[moves[1]].length
-        if (len-moves[0] > 0){
-            moved_stack[moves[1]] = moved_stack[moves[1]].slice(moves[0]-len)
-        } else {
-            moved_stack[moves[1]] = []
-        }    
+var _reverse = true;
+function move_crates(stack_to_col, _reverse=true){
+    var moved_stack = stack_to_col.slice();
+    for (let i = 0; i < move_steps.length; i++) {
+        moves = move_steps[i]
+        moves[1] -= 1 //converted to indexes
+        moves[2] -= 1
+        if (!isNaN(moves[0])){
+            if (_reverse){
+                console.log(moves[1], moved_stack[moves[1]])
+                moving_elements = moved_stack[moves[1]].slice(0, moves[0]).reverse()
+            } else {
+                moving_elements = moved_stack[moves[1]].slice(0, moves[0])
+            }
+            // console.log(stack_to_col[moves[2]])
+            moved_stack[moves[2]] = moving_elements.concat(moved_stack[moves[2]])
+            len = moved_stack[moves[1]].length
+            if (len-moves[0] > 0){
+                moved_stack[moves[1]] = moved_stack[moves[1]].slice(moves[0]-len)
+            } else {
+                moved_stack[moves[1]] = []
+            }    
+        }
+      }
+    var top_crates = []
+    for (let i=0; i<moved_stack.length; i++){
+        top_crates.push(moved_stack[i][0])
     }
-  }
-
-var top_crates = []
-for (let i=0; i<moved_stack.length; i++){
-    top_crates.push(moved_stack[i][0])
+return top_crates.join('')
 }
 
 console.log("........")
 // console.log(moved_stack)
-console.log("last elements: ", top_crates.join(''))
+console.log("last elements of the moved crates in REVERSE order  (part-2): ", move_crates(stack_to_col, false))
+console.log("last elements of the moved crates (part-1): ", move_crates(stack_to_col,true))
