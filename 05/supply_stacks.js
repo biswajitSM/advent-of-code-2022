@@ -26,7 +26,7 @@ num_cols_vals = input[index_splitter-1].split(/([0-9]+)/).map((num) => parseInt(
 num_cols_vals = removeNaN(num_cols_vals)
 move_steps = input.slice(index_splitter+1, input.length)
 
-console.log("columns values: ", num_cols_vals)
+// console.log("columns values: ", num_cols_vals)
 
 String.prototype.cleanup = function() {
     return this.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "-");
@@ -50,7 +50,7 @@ return Array.from({length: size}, () => undefined);
 
 for (let i=0; i<stacks.length; i++){
     stacks[i] = stacks[i].split('')
-    console.log(stacks[i].length)
+    // console.log(stacks[i].length)
 }
 var stack_to_col = []
 for (let i=0; i<num_cols_vals.length; i++){
@@ -68,34 +68,35 @@ for (let i=0; i<num_cols.length; i++){
         stack_to_col_i += 1
     }
 }
-console.log(stack_to_col)
+// console.log(stack_to_col)
 
 for (let i = 0; i < move_steps.length; i++) {
     move_steps[i] = move_steps[i].split(/([0-9]+)/).map((num) => parseInt(num, 10))
     move_steps[i] = removeNaN(move_steps[i])
 }
-
 var _reverse = true;
-function move_crates(stack_to_col, _reverse=true){
+
+function move_crates(stack_to_col, move_steps, _reverse=true){
     var moved_stack = stack_to_col.slice();
-    for (let i = 0; i < move_steps.length; i++) {
-        moves = move_steps[i]
-        moves[1] -= 1 //converted to indexes
-        moves[2] -= 1
+    var _move_steps = move_steps.slice();
+    for (let i = 0; i < _move_steps.length; i++) {
+        moves = _move_steps[i]
+        move_from = moves[1] - 1 //converted to indexes
+        move_to = moves[2] - 1
         if (!isNaN(moves[0])){
             if (_reverse){
-                console.log(moves[1], moved_stack[moves[1]])
-                moving_elements = moved_stack[moves[1]].slice(0, moves[0]).reverse()
+                // console.log(move_from, moved_stack[move_from])
+                moving_elements = moved_stack[move_from].slice(0, moves[0]).reverse()
             } else {
-                moving_elements = moved_stack[moves[1]].slice(0, moves[0])
+                moving_elements = moved_stack[move_from].slice(0, moves[0])
             }
-            // console.log(stack_to_col[moves[2]])
-            moved_stack[moves[2]] = moving_elements.concat(moved_stack[moves[2]])
-            len = moved_stack[moves[1]].length
+            // console.log(stack_to_col[move_to])
+            moved_stack[move_to] = moving_elements.concat(moved_stack[move_to])
+            len = moved_stack[move_from].length
             if (len-moves[0] > 0){
-                moved_stack[moves[1]] = moved_stack[moves[1]].slice(moves[0]-len)
+                moved_stack[move_from] = moved_stack[move_from].slice(moves[0]-len)
             } else {
-                moved_stack[moves[1]] = []
+                moved_stack[move_from] = []
             }    
         }
       }
@@ -108,5 +109,5 @@ return top_crates.join('')
 
 console.log("........")
 // console.log(moved_stack)
-console.log("last elements of the moved crates in REVERSE order  (part-2): ", move_crates(stack_to_col, false))
-console.log("last elements of the moved crates (part-1): ", move_crates(stack_to_col,true))
+console.log("last elements of the moved crates in REVERSE order  (part-2): ", move_crates(stack_to_col, move_steps, false))
+console.log("last elements of the moved crates (part-1): ", move_crates(stack_to_col, move_steps, true))
